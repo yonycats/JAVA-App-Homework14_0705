@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+
+
+	<insert id="insertBoard" parameterType="board.vo.BoardVO">
+		
+	INSERT INTO JDBC_BOARD (BOARD_NO, BOARD_TITLE, BOARD_WRITER, BOARD_DATE, BOARD_CONTENT) 
+	VALUES ( (SELECT NVL(MAX(BOARD_NO),0)+1 FROM JDBC_BOARD) , #{boardTitle}, #{boardWriter}, SYSDATE, #{boardContent})
+	
+	</insert>
+	
+	
+	<update id="updateBoard" parameterType="board.vo.BoardVO">
+		
+	UPDATE JDBC_BOARD
+	SET BOARD_TITLE = #{boardTitle}, BOARD_WRITER = #{boardWriter},
+	BOARD_CONTENT = #{boardContent}, BOARD_DATE = SYSDATE
+	WHERE BOARD_NO = #{boardNo}
+	
+	</update>
+	
+	
+	<delete id="deleteBoard" parameterType="board.vo.BoardVO">
+		
+	DELETE FROM JDBC_BOARD
+	WHERE BOARD_NO = #{boardNo}
+
+	</delete>
+	
+	
+	<select id="printAllBoard" parameterType="board.vo.BoardVO" resultType="board.vo.BoardVO">
+		
+<!-- 	SELECT * -->
+<!-- 	FROM (SELECT ROWNUM RN, B.* -->
+<!-- 		  FROM (SELECT BOARD_NO no, BOARD_DATE "date", BOARD_WRITER writer, BOARD_TITLE title, BOARD_CONTENT content -->
+<!-- 				FROM JDBC_BOARD ORDER BY BOARD_DATE) B) -->
+<!-- 				WHERE RN BETWEEN #{prePage} AND #{nextPage} -->
+				
+	SELECT *
+	FROM (SELECT ROWNUM RN, B.*
+		  FROM (SELECT BOARD_NO boardNo, BOARD_DATE boardDate, BOARD_WRITER boardWriter, BOARD_TITLE boardTitle, BOARD_CONTENT boardContent
+				FROM JDBC_BOARD ORDER BY BOARD_DATE) B)
+
+	</select>
+	
+	
+	<select id="detailBoard" parameterType="String" resultType="board.vo.BoardVO">
+		SELECT BOARD_NO boardNo, BOARD_DATE boardDate, BOARD_WRITER boardWriter, BOARD_TITLE boardTitle, BOARD_CONTENT boardContent
+		FROM JDBC_BOARD
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	
+	<!-- 파라미터를 VO로 받기 -->
+	<select id="searchBoard" resultType="board.vo.BoardVO">
+	
+	SELECT BOARD_NO boardNo, BOARD_DATE boardDate, BOARD_WRITER boardWriter, BOARD_TITLE boardTitle, BOARD_CONTENT boardContent
+	FROM JDBC_BOARD
+	<where>		
+		<if test = ' boardWriter != null and boardWriter != "" '>
+			and BOARD_WRITER LIKE '%' || #{boardWriter} || '%'
+		</if>
+		
+		<if test = ' boardTitle != null and boardTitle != "" '>
+			and BOARD_TITLE LIKE '%' || #{boardTitle} || '%'
+		</if>
+		
+		<if test = ' boardContent != null and boardContent != "" '>
+			and BOARD_CONTENT LIKE '%' || #{boardContent} || '%'
+		</if>
+		<if test = ' boardNo != null and boardNo != "" '>
+			and BOARD_NO = #{boardNo}
+		</if>
+	</where>
+	
+	</select>
+	
+	
+	<!-- 파라미터를 스트링으로 받기 -->
+	<select id="dateSearch" parameterType="String" resultType="board.vo.BoardVO">
+		
+	SELECT BOARD_NO boardNo, BOARD_DATE boardDate, BOARD_WRITER boardWriter, BOARD_TITLE boardTitle, BOARD_CONTENT boardContent
+	FROM JDBC_BOARD
+	<where>
+		<if test = ' value != null and value != "" '>
+			and BOARD_DATE LIKE TO_DATE(#{boardDate}, 'YYYY-MM-DD')
+		</if>
+	</where>
+	
+	</select>
+
+</mapper>

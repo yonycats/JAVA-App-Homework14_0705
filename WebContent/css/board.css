@@ -1,0 +1,46 @@
+#container {
+  font-family: "Do Hyeon", sans-serif;
+  width: 80%;
+}
+td {
+	border: 2px solid #f59494;
+	width : 100px;
+	height : 30px;
+}
+#table {
+	height : 30px;
+	text-align: center;
+	margin-top: 15px;
+}
+#board-id {
+	width : 30px;	
+	text-align: center;
+	border-left: 2px solid red;
+}
+#board-date {
+	width : 60px;	
+}
+#board-writer, #board-title {
+	width : 40px;
+}
+#board-con {
+	width : 150px;
+	height : 30px;
+	text-align: left;
+	border-right: 2px solid red;
+}
+#table-td{
+	border: 2px solid blue;
+}
+#table-tr th {
+	background-color: lightgreen;
+	border: 2px solid green;
+	text-align: center;
+}
+.aside1 {
+	width: 10%;
+	background-color: black;
+}
+.aside2 {
+	width: 10%;
+}
